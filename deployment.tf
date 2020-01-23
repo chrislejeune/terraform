@@ -69,3 +69,24 @@ resource "aws_security_group" "allow ssh" {
 }
 }
 
+resource "aws_instance" "nginx" {
+  ami                    = data.aws_ami.aws-linux-id
+  instance_type          = "t2.micro"
+  key_name               = var.key_name
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  
+  connection {
+    type        = "ssh"
+    host        = "self.public_.ip"
+    user        = "ec2-user"
+    private_key = file(var.provate_key_path)
+}
+
+  provisioner {
+    inline = [
+      "sudo yum install nginx -y"
+      "sudo service nginx start"
+    ]
+  }
+}
+
