@@ -44,7 +44,7 @@ resource "aws_default_vpc" "default" {
 
 }
 
-resource "aws_security_group" "allow ssh" {
+resource "aws_security_group" "allow_ssh" {
   name        = "nginx_demo"
   description = "allow ports for nginx demo"
   vpc_id      = aws_default_vpc.default.id
@@ -82,9 +82,9 @@ resource "aws_instance" "nginx" {
     private_key = file(var.provate_key_path)
 }
 
-  provisioner {
+  provisioner "remote-exec"{
     inline = [
-      "sudo yum install nginx -y"
+      "sudo yum install nginx -y",
       "sudo service nginx start"
     ]
   }
